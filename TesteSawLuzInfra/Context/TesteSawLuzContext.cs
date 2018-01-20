@@ -48,25 +48,7 @@ namespace TesteSawLuz.Infra.Context
 
         public void EnsureSeedData(TesteSawLuzContext context)
         {
-            //TipoPessoa fisica = new TipoPessoa
-            //{
-            //    IdTipo = 1,
-            //    Descricao = "Pessoa Fisica"
-            //};
-
-            //TipoPessoa juridica = new TipoPessoa
-            //{
-            //    IdTipo = 2,
-            //    Descricao = "Pessoa Juridica"
-            //};
-
-            //var listTipos = new List<TipoPessoa> { fisica, juridica };
-
-            //if ((!context.Set<TipoPessoa>().Any()) || (context.Set<TipoPessoa>().Any(x => !listTipos.Any(y => y.IdTipo == x.IdTipo))))
-            //{
-            //    context.AddRange(listTipos);
-            //    context.SaveChanges();
-            //}
+           
         }
     }
 
