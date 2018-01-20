@@ -1,0 +1,155 @@
+﻿@{
+	ViewData["Title"] = "Restaurantes";
+}
+
+<div style="margin-top:5%!important">
+	<form>
+		<fieldset class="scheduler-border">
+			<legend class="scheduler-border">Filtros:</legend>
+			<div class="form-group">
+				<label>Nome</label>
+				<input type="text" class="form-control" style="width:35%!important" placeholder="Restaurante" id="txtPesquisarRestaurante">
+			</div>
+			<div>
+				<button type="button" class="btn btn-primary" id="btnListarRestaurante"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pesquisar</button>
+				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#restauranteModal" onclick="setCadastrar()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Cadastrar Restaurante</button>
+
+			</div>
+		</fieldset>
+	</form>
+</div>
+
+<br /><br />
+<div id="gridRestaurantes"></div>
+
+<div>
+	@Html.Partial("_ModalRestaurante")
+</div>
+
+
+<script>
+
+	$(function() {
+		$("#btnListarRestaurante").on("click",
+			function() {
+				listarRestaurantes($('#txtPesquisarRestaurante').val());
+			});
+
+		listarRestaurantes("");
+
+		setCadastrar();
+	});
+
+	function setCadastrar() {
+
+		$("#nomeRestaurante").val("");
+		$("#hdnIdRestaurante").val("");
+
+		$("#btnCadastrarEditar").off().on("click", function () {
+			cadastrar();
+		});
+	}
+
+	function abrirEditarRestaurante(idRestaurante, nomeRestaurante) {
+
+
+		$("#restauranteModal").modal("show");
+		$("#nomeRestaurante").val(nomeRestaurante);
+		$("#hdnIdRestaurante").val(idRestaurante);
+
+		$("#btnCadastrarEditar").off().on("click", function() {
+			editarRestaurante();
+		});
+	}
+
+	function cadastrar() {
+
+		$("#restauranteModal").modal("hide");
+		abrirLoading();
+		$.ajax({
+			url: '@Url.Action("CadastrarRestaurante", "Restaurante")',
+			data: $('#dadosRestaurante').serialize(),
+			type: 'POST',
+			dataType: 'json',
+			success: function(result) {
+
+				listarRestaurantes("");
+
+				abrirAlerta("Sucesso", result.mensagem);
+
+				fecharLoading();
+			},
+			error: function (er) {
+
+				abrirAlerta("Erro", er.responseJSON.mensagem);
+
+				fecharLoading();
+			}
+		});
+	}
+
+	function editarRestaurante() {
+
+		$("#restauranteModal").modal("hide");
+
+		abrirLoading();
+		$.ajax({
+			url: '@Url.Action("EditarRestaurante", "Restaurante")',
+			data: $('#dadosRestaurante').serialize(),
+			type: 'PUT',
+			dataType: 'json',
+			success: function(result) {
+
+				listarRestaurantes("");
+
+				abrirAlerta("Sucesso", result.mensagem);
+
+				fecharLoading();
+			},
+			error: function (er) {
+
+				abrirAlerta("Erro", er.responseJSON.mensagem);
+				fecharLoading();
+			}
+		});
+	}
+
+	function excluirRestaurante(idRestaurante) {
+		abrirLoading();
+		$.ajax({
+			url: '@Url.Action("ExcluirRestaurante", "Restaurante")',
+			data: { idRestaurante: idRestaurante},
+			type: 'DELETE',
+			success: function (result) {
+
+				listarRestaurantes();
+
+				abrirAlerta("Sucesso", result.mensagem);
+
+				fecharLoading();
+			},
+			error: function (er) {
+				abrirAlerta("Erro", er.responseJSON.mensagem);
+				fecharLoading();
+			}
+		});
+	}
+
+	function listarRestaurantes(nomeRestaurante) {
+		abrirLoading();
+		$.ajax({
+			url: '@Url.Action("ListarRestaurantes", "Restaurante")',
+			data: { nome: nomeRestaurante},
+			type: 'GET',
+			success: function (result) {
+
+				$("#gridRestaurantes").html(result);
+				fecharLoading();
+			},
+			error: function (er) {
+				abrirAlerta("Erro", er.responseJSON.mensagem);
+				fecharLoading();
+			}
+		});
+	}
+</script>

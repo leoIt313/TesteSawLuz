@@ -1,0 +1,26 @@
+﻿@model List<TesteSawLuz.Application.ViewModel.Response.ListarRestauranteResponseViewModel>
+
+<table class="table" >
+	<thead class="thead-dark">
+		<tr>
+			<th scope="col">#</th>
+			<th></th>
+			<th></th>
+			<th scope="col">Restaurante</th>
+	</thead>
+	<tbody>
+		@if (Model != null)
+		{
+			for (int i = 0; i < Model.Count; i++)
+			{
+				<tr>
+					<th scope="row">@Model[i].IdRestaurante </th>
+					<td onclick="abrirEditarRestaurante('@Model[i].IdRestaurante','@Model[i].NomeRestaurante')"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></td>
+					<td><span class="glyphicon glyphicon-trash" aria-hidden="true" onclick="excluirRestaurante('@Model[i].IdRestaurante')"></span></td>
+					<td>@Model[i].NomeRestaurante</td>
+				</tr>
+			}
+		}
+
+	</tbody>
+</table>

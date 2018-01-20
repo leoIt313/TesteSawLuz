@@ -1,0 +1,33 @@
+﻿@model TesteSawLuz.Application.ViewModel.Request.CadastrarEditarRestauranteRequestViewModel
+
+<div class="modal fade" id="restauranteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">
+					Cadastrar Restaurante
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</h3>
+
+			</div>
+			<div class="modal-body">
+				<form id="dadosRestaurante">
+					<fieldset class="scheduler-border">
+						<legend class="scheduler-border">Dados:</legend>
+						<div class="form-group">
+							<label>Nome</label>
+							@Html.TextBoxFor(x => x.NomeRestaurante, new { @id = "nomeRestaurante" })
+							@Html.HiddenFor(x => x.IdRestaurante, new { @id = "hdnIdRestaurante" })
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Cancelar</button>
+				<button type="button" class="btn btn-success" ata-dismiss="modal" id="btnCadastrarEditar"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Salvar</button>
+			</div>
+		</div>
+	</div>
+</div>

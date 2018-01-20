@@ -1,0 +1,145 @@
+﻿@{
+	ViewData["Title"] = "Pratos";
+}
+
+<h2>@ViewData["Title"]</h2>
+<br /><br />
+
+<div style="margin-top:5%!important">
+	<div>
+		<button type="button" class="btn btn-success" data-toggle="modal" data-target="#pratoModal" onclick="setCadastrar()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Cadastrar Prato</button>
+	</div>
+</div>
+<br /><br />
+
+<div id="gridPratos"></div>
+
+<div>
+	@Html.Partial("_ModalPratos")
+</div>
+
+<script>
+
+	$(function() {
+
+		listarPratos();
+		setCadastrar();
+	});
+
+	function setCadastrar()
+	{
+		$("#hdnIdPrato").val("");
+		$("#ddlRestaurantes").val("");
+		$("#txtNomePrato").val("");
+		$("#txtValor").val("");
+
+		$("#btnCadastrarEditarPrato").off().on("click", function () {
+			cadastrar();
+		});
+	}
+
+	function abrirEditarPrato(idPrato, idRestaurante, nomePrato,valor) {
+
+
+		$("#pratoModal").modal("show");
+
+		$("#hdnIdPrato").val(idPrato);
+		$("#ddlRestaurantes").val(idRestaurante);
+		$("#txtNomePrato").val(nomePrato);
+		$("#txtValor").val(valor);
+
+		$("#btnCadastrarEditarPrato").off().on("click", function() {
+			editarPrato();
+		});
+	}
+
+	function editarPrato() {
+
+		$("#pratoModal").modal("hide");
+
+		abrirLoading();
+		$.ajax({
+			url: '@Url.Action("EditarPrato", "Prato")',
+			data: $('#dadosPratos').serialize(),
+			type: 'POST',
+			dataType: 'json',
+			success: function(result) {
+
+				listarPratos();
+
+				abrirAlerta("Sucesso", result.mensagem);
+
+				fecharLoading();
+			},
+			error: function(er) {
+				abrirAlerta("Erro", er.responseJSON.mensagem);
+				fecharLoading();
+			}
+		});
+	}
+
+
+	function cadastrar() {
+
+		$("#pratoModal").modal("hide");
+
+		abrirLoading();
+		$.ajax({
+			url: '@Url.Action("CadastrarPrato", "Prato")',
+			data: $('#dadosPratos').serialize(),
+			type: 'POST',
+			dataType: 'json',
+			success: function(result) {
+
+				listarPratos();
+
+				abrirAlerta("Sucesso", result.mensagem);
+
+				fecharLoading();
+			},
+			error: function(er) {
+				abrirAlerta("Erro", er.responseJSON.mensagem);
+				fecharLoading();
+			}
+		});
+	}
+
+	function excluirPrato(idPrato) {
+		abrirLoading();
+		$.ajax({
+			url: '@Url.Action("ExcluirPrato", "Prato")',
+			data: { idPrato: idPrato},
+			type: 'DELETE',
+			success: function (result) {
+
+				listarPratos();
+
+				abrirAlerta("Sucesso", result.mensagem);
+
+				fecharLoading();
+			},
+			error: function (er) {
+				abrirAlerta("Erro", er.responseJSON.mensagem);
+				fecharLoading();
+			}
+		});
+	}
+
+	function listarPratos() {
+		abrirLoading();
+		$.ajax({
+			url: '@Url.Action("ListarPratos", "Prato")',
+			type: 'GET',
+			success: function (result) {
+
+				$("#gridPratos").html(result);
+			
+				fecharLoading();
+			},
+			error: function (er) {
+				abrirAlerta("Erro", er.responseJSON.mensagem);
+				fecharLoading();
+			}
+		});
+	}
+</script>
